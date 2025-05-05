@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="mb-0">Legal Disclosure</h1>
+                <a href="{{ url_for('store_front') }}" class="btn btn-primary">
+                    <i class="fas fa-home"></i> Return to Home
+                </a>
+            </div>
+            <p class="text-muted">Last Updated: 2024-03-19</p>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">1. Terms of Service</h2>
+                    <p>By accessing and using Phantom Pixels Game Store, you agree to be bound by these Terms of Service. Our platform provides digital game distribution services, and all purchases are subject to the terms and conditions of both our store and the respective game publishers.</p>
+                    <p>Users must be at least 13 years old to create an account. Users between 13 and 18 years old must have parental consent to make purchases.</p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">2. Privacy Policy</h2>
+                    <p>We collect and process personal information including:</p>
+                    <ul>
+                        <li>Account information (email, username, password)</li>
+                        <li>Purchase history and payment details</li>
+                        <li>Device information and IP address</li>
+                        <li>Usage data and preferences</li>
+                    </ul>
+                    <p>This information is used to:</p>
+                    <ul>
+                        <li>Process your transactions</li>
+                        <li>Provide customer support</li>
+                        <li>Send important updates about your purchases</li>
+                        <li>Improve our services</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">3. Digital Rights and Licensing</h2>
+                    <p>All games purchased through our platform are licensed, not sold. The license grants you the right to download and play the game for personal, non-commercial use. You may not:</p>
+                    <ul>
+                        <li>Resell or transfer your license</li>
+                        <li>Modify or create derivative works</li>
+                        <li>Use the games for commercial purposes</li>
+                        <li>Share your account credentials</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">4. Refund Policy</h2>
+                    <p>We offer refunds under the following conditions:</p>
+                    <ul>
+                        <li>Technical issues preventing game launch</li>
+                        <li>Accidental purchases (within 24 hours)</li>
+                        <li>Games that don't match their description</li>
+                    </ul>
+                    <p>Refunds are not available for:</p>
+                    <ul>
+                        <li>Games played for more than 2 hours</li>
+                        <li>Purchases made more than 14 days ago</li>
+                        <li>Games purchased during sales or promotions</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">5. User Conduct</h2>
+                    <p>Users must not:</p>
+                    <ul>
+                        <li>Engage in fraudulent activities</li>
+                        <li>Attempt to bypass security measures</li>
+                        <li>Use automated systems to make purchases</li>
+                        <li>Harass other users or staff</li>
+                        <li>Share inappropriate content</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">6. Intellectual Property</h2>
+                    <p>All content on our platform, including but not limited to:</p>
+                    <ul>
+                        <li>Game titles and content</li>
+                        <li>Website design and layout</li>
+                        <li>Logos and branding</li>
+                        <li>User interface elements</li>
+                    </ul>
+                    <p>are protected by copyright, trademark, and other intellectual property laws.</p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">7. Limitation of Liability</h2>
+                    <p>Phantom Pixels Game Store is not liable for:</p>
+                    <ul>
+                        <li>Loss of game progress or saved data</li>
+                        <li>Compatibility issues with your hardware</li>
+                        <li>Third-party service interruptions</li>
+                        <li>Indirect or consequential damages</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">8. Changes to Terms</h2>
+                    <p>We reserve the right to modify these terms at any time. Users will be notified of significant changes via email or through our website. Continued use of our services after such changes constitutes acceptance of the new terms.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">9. Contact Information</h2>
+                    <p>For legal inquiries, please contact:</p>
+                    <p>
+                        Phantom Pixels Game Store<br>
+                        Legal Department<br>
+                        123 Gaming Street<br>
+                        Digital City, DC 12345<br>
+                        Email: legal@phantom pixels.com<br>
+                        Phone: (555) 123-4567
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .card-body {
+        padding: 1.5rem;
+    }
+    
+    h1 {
+        color: #333;
+        font-weight: 600;
+    }
+    
+    h2 {
+        color: #444;
+        font-weight: 500;
+    }
+    
+    ul {
+        padding-left: 1.2rem;
+    }
+    
+    li {
+        margin-bottom: 0.5rem;
+    }
+    
+    .text-muted {
+        font-size: 0.9rem;
+    }
+</style>
+{% endblock %} 

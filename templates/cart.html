@@ -1,0 +1,355 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - Phantom Pixels</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .cart-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .cart-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .cart-header h1 {
+            font-family: 'Press Start 2P', cursive;
+            color: #ff0000;
+            font-size: 24px;
+        }
+
+        .cart-items {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .cart-item img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 20px;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .item-price {
+            color: #2ecc71;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .remove-item {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+            transition: background-color 0.2s;
+        }
+
+        .remove-item:hover {
+            background: #c0392b;
+        }
+
+        .cart-summary {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .checkout-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #ff0000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        .checkout-btn:hover {
+            background-color: #cc0000;
+        }
+
+        .guest-checkout-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        .guest-checkout-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .clear-cart-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #95a5a6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        .clear-cart-btn:hover {
+            background-color: #7f8c8d;
+        }
+
+        .continue-shopping {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+
+        .continue-shopping:hover {
+            background-color: #2980b9;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .summary-row.total {
+            font-size: 20px;
+            font-weight: bold;
+            border-top: 2px solid #eee;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+    <div class="cart-container">
+        <div class="cart-header">
+            <h1>Shopping Cart</h1>
+        </div>
+        <div id="cart-items" class="cart-items">
+            <!-- Cart items will be inserted here by JavaScript -->
+        </div>
+        <div id="empty-cart" style="display: none;">
+            <p>Your cart is empty</p>
+            <a href="/" class="continue-shopping">Continue Shopping</a>
+        </div>
+        <div id="cart-summary" class="cart-summary">
+            <div class="summary-row">
+                <span>Subtotal:</span>
+                <span id="subtotal">$0.00</span>
+            </div>
+            <div class="summary-row">
+                <span>Tax (10%):</span>
+                <span id="tax">$0.00</span>
+            </div>
+            <div class="summary-row total">
+                <span>Total:</span>
+                <span id="total">$0.00</span>
+            </div>
+            <div class="checkout-options">
+                <button id="checkout-btn" class="checkout-btn">Proceed to Checkout</button>
+                <button id="guest-checkout-btn" class="guest-checkout-btn">Guest Checkout</button>
+                <button id="clear-cart-btn" class="clear-cart-btn">Clear Cart</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function loadCart() {
+            fetch('/api/cart')
+                .then(response => response.json())
+                .then(data => {
+                    const cartItems = document.getElementById('cart-items');
+                    const emptyCart = document.getElementById('empty-cart');
+                    const cartSummary = document.getElementById('cart-summary');
+                    
+                    if (data.items.length === 0) {
+                        cartItems.style.display = 'none';
+                        emptyCart.style.display = 'block';
+                        cartSummary.style.display = 'none';
+                        return;
+                    }
+                    
+                    cartItems.style.display = 'block';
+                    emptyCart.style.display = 'none';
+                    cartSummary.style.display = 'block';
+                    
+                    let subtotal = 0;
+                    cartItems.innerHTML = data.items.map(item => {
+                        subtotal += item.price;
+                        return `
+                            <div class="cart-item" data-id="${item.id}">
+                                <img src="/static/images/games/${item.id}.jpg" alt="${item.name}" onerror="this.src='https://picsum.photos/seed/${item.name.replace(/\s+/g, '')}/200/200'">
+                                <div class="item-details">
+                                    <h3 class="item-title">${item.name}</h3>
+                                    <p class="item-price">$${item.price.toFixed(2)}</p>
+                                </div>
+                                <button class="remove-item" onclick="removeFromCart('${item.id}')">Remove</button>
+                            </div>
+                        `;
+                    }).join('');
+                    
+                    const tax = subtotal * 0.1;
+                    const total = subtotal + tax;
+                    
+                    document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
+                    document.getElementById('tax').textContent = `$${tax.toFixed(2)}`;
+                    document.getElementById('total').textContent = `$${total.toFixed(2)}`;
+                });
+        }
+
+        function removeFromCart(gameId) {
+            console.log('Removing game:', gameId);
+            
+            fetch('/api/cart/remove', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ game_id: gameId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Remove response:', data);
+                if (data.success) {
+                    showNotification('Game removed from cart');
+                    updateCartCount(data.cart_count);
+                    loadCart(); // Reload cart to update display
+                } else {
+                    showNotification(data.message || 'Failed to remove game from cart', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error removing game:', error);
+                showNotification('Error removing game from cart', 'error');
+            });
+        }
+
+        function clearCart() {
+            if (!confirm('Are you sure you want to clear your cart?')) {
+                return;
+            }
+            
+            fetch('/api/cart/clear', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification('Cart cleared');
+                    updateCartCount(0);
+                    loadCart(); // Reload cart to update display
+                } else {
+                    showNotification(data.message || 'Failed to clear cart', 'error');
+                }
+            })
+            .catch(error => {
+                showNotification('Error clearing cart', 'error');
+            });
+        }
+
+        function updateCartCount(count) {
+            const cartCount = document.getElementById('cart-count');
+            if (cartCount) {
+                cartCount.textContent = count;
+            }
+        }
+
+        // Load cart when page loads
+        document.addEventListener('DOMContentLoaded', loadCart);
+
+        // Add event listener for clear cart button
+        document.getElementById('clear-cart-btn').addEventListener('click', clearCart);
+
+        // Add event listener for checkout button
+        document.getElementById('checkout-btn').addEventListener('click', function() {
+            window.location.href = '/checkout';
+        });
+
+        document.getElementById('guest-checkout-btn').addEventListener('click', function() {
+            window.location.href = '/guest-checkout';
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

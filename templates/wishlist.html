@@ -1,0 +1,314 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Wishlist - Phantom Pixels</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .wishlist-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .wishlist-header {
+            text-align: center;
+            margin-bottom: 30px;
+            background-color: #ffe6e6;
+            padding: 30px;
+            border-radius: 15px;
+            border: 3px solid #ffcccc;
+        }
+
+        .wishlist-header h1 {
+            font-family: 'Press Start 2P', cursive;
+            color: #ff0000;
+            font-size: 24px;
+            margin: 0;
+            text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        .wishlist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .game-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            border: 3px solid black;
+            position: relative;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .game-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .game-info {
+            padding: 15px;
+        }
+
+        .game-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .game-genres {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .genre-tag {
+            background-color: #ff0000;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .game-description {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .game-price {
+            color: #2ecc71;
+            font-weight: bold;
+            font-size: 18px;
+            margin: 10px 0;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            color: #e74c3c;
+            margin-right: 10px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .add-to-cart {
+            flex: 1;
+            padding: 10px;
+            background-color: #ff0000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+            transition: background-color 0.2s;
+        }
+
+        .add-to-cart:hover {
+            background-color: #cc0000;
+        }
+
+        .remove-wishlist {
+            flex: 1;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+            transition: background-color 0.2s;
+        }
+
+        .remove-wishlist:hover {
+            background-color: #222;
+        }
+
+        .empty-wishlist {
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: 3px solid #ffcccc;
+        }
+
+        .empty-wishlist p {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .browse-games-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #ff0000;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        .browse-games-btn:hover {
+            background-color: #cc0000;
+        }
+
+        .cart-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.9em;
+            z-index: 1000;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+    <div class="wishlist-container">
+        <div class="wishlist-header">
+            <h1>My Wishlist</h1>
+        </div>
+
+        {% if items %}
+        <div class="wishlist-grid">
+            {% for game in items %}
+            <div class="game-card">
+                <img src="https://picsum.photos/seed/{{game.name.replace(' ', '')}}/500/700" alt="{{game.name}}">
+                <div class="game-info">
+                    <h3 class="game-title">{{game.name}}</h3>
+                    {% if game.genres %}
+                    <div class="game-genres">
+                        {% for genre in game.genres %}
+                        <span class="genre-tag">{{genre}}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <p class="game-description">{{game.description}}</p>
+                    <p class="game-price">
+                        {% if game.original_price and game.original_price > game.price %}
+                        <span class="original-price">${{game.original_price}}</span>
+                        {% endif %}
+                        ${{game.price}}
+                    </p>
+                    <div class="button-group">
+                        <button class="add-to-cart" onclick="addToCart('{{game.id}}', '{{game.name}}', {{game.price}})">
+                            Add to Cart
+                        </button>
+                        <button class="remove-wishlist" onclick="toggleWishlist('{{game.id}}')">
+                            Remove
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-wishlist">
+            <p>Your wishlist is empty</p>
+            <a href="/" class="browse-games-btn">Browse Games</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <div id="cartNotification" class="cart-notification">
+        Item added to cart!
+    </div>
+
+    <script>
+        function toggleWishlist(productId) {
+            fetch(`/api/wishlist/toggle/${productId}`, {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Refresh the page to update the wishlist
+                    location.reload();
+                }
+            });
+        }
+
+        function addToCart(id, name, price) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const existingItem = cart.find(item => item.id === id);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: id,
+                    name: name,
+                    price: price,
+                    quantity: 1
+                });
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            const cartCount = document.getElementById('cartCount');
+            if (cartCount) {
+                cartCount.textContent = cart.length;
+            }
+            
+            // Show notification
+            const notification = document.getElementById('cartNotification');
+            notification.style.display = 'block';
+            
+            // Hide notification after 3 seconds
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
+{% endblock %}

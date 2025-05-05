@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Phantom Pixels</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 40px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header h1 {
+            font-family: 'Press Start 2P', cursive;
+            color: #ff0000;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .error-message {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #ff0000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive;
+            transition: background-color 0.2s;
+        }
+
+        .submit-btn:hover {
+            background-color: #cc0000;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .register-link a {
+            color: #ff0000;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .register-button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive;
+            margin-top: 10px;
+            text-decoration: none;
+            text-align: center;
+            transition: background-color 0.2s;
+        }
+
+        .register-button:hover {
+            background-color: #27ae60;
+        }
+
+        .error-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .error-actions button {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+        }
+
+        .try-again-btn {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .register-now-btn {
+            background-color: #2ecc71;
+            color: white;
+        }
+
+        .shake {
+            animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .remember-me label {
+            margin: 0;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+    <div class="login-container">
+        <div class="login-header">
+            <h1>Login</h1>
+        </div>
+
+        {% if error %}
+        <div class="error-message" id="errorMessage">
+            {{ error }}
+            {% if show_register %}
+            <div class="error-actions">
+                <button class="try-again-btn" onclick="clearError()">Try Again</button>
+                <button class="register-now-btn" onclick="window.location.href='/register'">Register Now</button>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <form action="/login" method="POST" id="loginForm">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required value="{{ email if email else '' }}">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group remember-me">
+                <input type="checkbox" id="remember_me" name="remember_me">
+                <label for="remember_me">Keep me logged in</label>
+            </div>
+            <button type="submit" class="submit-btn">Login</button>
+        </form>
+
+        <div class="register-link">
+            <p>Don't have an account?</p>
+            <a href="/register" class="register-button">Create Account</a>
+        </div>
+    </div>
+
+    <script>
+        function clearError() {
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('password').value = '';
+            document.getElementById('password').focus();
+        }
+
+        // Add shake animation when form has error
+        {% if error %}
+            document.querySelector('.login-container').classList.add('shake');
+        {% endif %}
+
+        // Remove shake class after animation ends
+        document.querySelector('.login-container').addEventListener('animationend', function() {
+            this.classList.remove('shake');
+        });
+
+        // Form validation
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            if (!email || !password) {
+                e.preventDefault();
+                const errorMessage = document.createElement('div');
+                errorMessage.className = 'error-message';
+                errorMessage.textContent = 'Please fill in all fields';
+                this.insertBefore(errorMessage, this.firstChild);
+                document.querySelector('.login-container').classList.add('shake');
+            }
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

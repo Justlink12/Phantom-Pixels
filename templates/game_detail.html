@@ -1,0 +1,673 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{{game['name']}} - Phantom Pixels</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+        }
+        .banner {
+            background-color: #ff0000;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .store-name {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 2em;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .game-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            position: relative;
+        }
+        .game-header {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        .game-image-container {
+            position: relative;
+        }
+        .game-image {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .wishlist-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #ff0000;
+            transition: all 0.2s;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .wishlist-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .wishlist-btn.in-wishlist {
+            background: #ff0000;
+            color: white;
+        }
+        .game-info {
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .game-title {
+            font-size: 2.5em;
+            margin: 0 0 20px 0;
+            font-family: 'Press Start 2P', cursive;
+            color: #333;
+        }
+        .game-price {
+            font-size: 1.5em;
+            color: #2ecc71;
+            margin: 20px 0;
+            font-family: 'Press Start 2P', cursive;
+        }
+        .game-description {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #666;
+            margin: 20px 0;
+        }
+        .release-date {
+            font-size: 1.1em;
+            color: #666;
+            margin: 10px 0;
+        }
+        .stock-info {
+            font-size: 1.1em;
+            color: #666;
+            margin: 10px 0;
+        }
+        .add-to-cart {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-family: 'Press Start 2P', cursive;
+        }
+        .add-to-cart:hover {
+            background: #ff5252;
+        }
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #666;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.9em;
+        }
+        .original-price {
+            text-decoration: line-through;
+            color: #999;
+            margin-right: 10px;
+        }
+        .cart-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.9em;
+            z-index: 1000;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+        .game-genres {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .genre-tag {
+            background: #ff0000;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-family: 'Press Start 2P', cursive;
+        }
+        .reviews-section {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 1px solid #eee;
+        }
+        .reviews-section h2 {
+            font-family: 'Press Start 2P', cursive;
+            color: #ff0000;
+            margin-bottom: 30px;
+        }
+        .reviews-summary {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 40px;
+            margin-bottom: 40px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        .overall-rating {
+            text-align: center;
+        }
+        .rating-number {
+            font-size: 48px;
+            font-weight: bold;
+            color: #333;
+        }
+        .rating-stars {
+            color: #f1c40f;
+            margin: 10px 0;
+        }
+        .rating-count {
+            color: #666;
+            font-size: 14px;
+        }
+        .rating-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .rating-bar {
+            display: grid;
+            grid-template-columns: 60px 1fr 40px;
+            align-items: center;
+            gap: 10px;
+        }
+        .bar-container {
+            height: 8px;
+            background-color: #eee;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .bar {
+            height: 100%;
+            background-color: #f1c40f;
+            border-radius: 4px;
+        }
+        .reviews-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .review-card {
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            background-color: white;
+        }
+        .review-header {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .reviewer-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .reviewer-name {
+            font-weight: bold;
+            color: #333;
+        }
+        .review-date {
+            font-size: 12px;
+            color: #666;
+        }
+        .review-rating {
+            color: #f1c40f;
+        }
+        .review-content {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        .review-helpful {
+            font-size: 14px;
+            color: #666;
+        }
+        .review-helpful button {
+            background: none;
+            border: none;
+            color: #007bff;
+            cursor: pointer;
+            padding: 0 5px;
+        }
+        .review-helpful button:hover {
+            text-decoration: underline;
+        }
+        .load-more-reviews {
+            display: block;
+            margin: 30px auto;
+            padding: 12px 24px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .load-more-reviews:hover {
+            background-color: #e9ecef;
+        }
+        @media (max-width: 768px) {
+            .game-header {
+                grid-template-columns: 1fr;
+            }
+            .reviews-summary {
+                grid-template-columns: 1fr;
+            }
+            .review-header {
+                grid-template-columns: auto 1fr;
+            }
+            .review-rating {
+                grid-column: 1 / -1;
+            }
+        }
+        .gallery-section {
+            margin: 40px auto;
+            max-width: 1200px;
+            padding: 0 20px;
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        .gallery-item:hover {
+            transform: scale(1.02);
+        }
+        .gallery-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            display: block;
+        }
+        @media (max-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        /* Modal styles for image preview */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            max-width: 90%;
+            max-height: 90vh;
+            object-fit: contain;
+        }
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+
+    <div class="game-container">
+        <a href="/" class="back-button">← Back to Store</a>
+        
+        <div class="game-header">
+            <div class="game-image-container">
+                <img src="/static/images/games/{{game_id}}.jpg" alt="{{game['name']}}" class="game-image" onerror="this.src='https://picsum.photos/seed/{{game['name'].replace(' ', '')}}/500/700'">
+                {% if session.get('user_id') %}
+                <button class="wishlist-btn" data-id="{{game_id}}" onclick="toggleWishlist('{{game_id}}')">♡</button>
+                {% endif %}
+            </div>
+            
+            <div class="game-info">
+                <h1 class="game-title">{{game['name']}}</h1>
+                
+                {% if game.get('genres') %}
+                <div class="game-genres">
+                    {% for genre in game['genres'] %}
+                    <span class="genre-tag">{{genre}}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <p class="game-description">{{game['description']}}</p>
+                
+                <p class="game-price">
+                    {% if game.get('original_price') and game['original_price'] > game['price'] %}
+                    <span class="original-price">${{game['original_price']}}</span>
+                    {% endif %}
+                    ${{game['price']}}
+                </p>
+                
+                {% if game.get('release_date') %}
+                <p class="release-date">Release Date: {{game['release_date']}}</p>
+                {% endif %}
+                
+                {% if game.get('stock') %}
+                <p class="stock-info">In Stock: {{game['stock']}} units</p>
+                {% endif %}
+                
+                <button class="add-to-cart" onclick="addToCart('{{game_id}}')">
+                    Add to Cart
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="gallery-section">
+        <h2 class="section-title">Game Gallery</h2>
+        <div class="gallery-grid">
+            {% for i in range(1, 5) %}
+            <div class="gallery-item">
+                <img src="/static/images/games/gallery/{{game_id}}_{{i}}.jpg" 
+                     alt="{{game['name']}} screenshot {{i}}" 
+                     class="gallery-image"
+                     onerror="this.src='https://picsum.photos/seed/{{game['name'].replace(' ', '')}}_{{i}}/800/450'">
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div id="cartNotification" class="cart-notification">
+        Item added to cart!
+    </div>
+
+    <!-- Modal for image preview -->
+    <div id="imageModal" class="modal">
+        <span class="modal-close">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <div class="reviews-section">
+        <h2>Customer Reviews</h2>
+        <div class="reviews-summary">
+            <div class="overall-rating">
+                <div class="rating-number">4.8</div>
+                <div class="rating-stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                </div>
+                <div class="rating-count">Based on 128 reviews</div>
+            </div>
+            <div class="rating-bars">
+                <div class="rating-bar">
+                    <span>5 stars</span>
+                    <div class="bar-container">
+                        <div class="bar" style="width: 75%"></div>
+                    </div>
+                    <span>75%</span>
+                </div>
+                <div class="rating-bar">
+                    <span>4 stars</span>
+                    <div class="bar-container">
+                        <div class="bar" style="width: 15%"></div>
+                    </div>
+                    <span>15%</span>
+                </div>
+                <div class="rating-bar">
+                    <span>3 stars</span>
+                    <div class="bar-container">
+                        <div class="bar" style="width: 5%"></div>
+                    </div>
+                    <span>5%</span>
+                </div>
+                <div class="rating-bar">
+                    <span>2 stars</span>
+                    <div class="bar-container">
+                        <div class="bar" style="width: 3%"></div>
+                    </div>
+                    <span>3%</span>
+                </div>
+                <div class="rating-bar">
+                    <span>1 star</span>
+                    <div class="bar-container">
+                        <div class="bar" style="width: 2%"></div>
+                    </div>
+                    <span>2%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="reviews-list">
+            <!-- Review 1 -->
+            <div class="review-card">
+                <div class="review-header">
+                    <img src="https://i.pravatar.cc/150?img=1" alt="User Avatar" class="reviewer-avatar">
+                    <div class="reviewer-info">
+                        <div class="reviewer-name">Alex Thompson</div>
+                        <div class="review-date">Verified Purchase • 2 days ago</div>
+                    </div>
+                    <div class="review-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                <div class="review-content">
+                    <p>Absolutely amazing game! The graphics are stunning and the gameplay is incredibly smooth. I've been playing for hours and still discovering new features. The story is engaging and the character development is top-notch. Definitely worth every penny!</p>
+                </div>
+                <div class="review-helpful">
+                    <span>Helpful? <button>Yes (24)</button> <button>No (2)</button></span>
+                </div>
+            </div>
+
+            <!-- Review 2 -->
+            <div class="review-card">
+                <div class="review-header">
+                    <img src="https://i.pravatar.cc/150?img=2" alt="User Avatar" class="reviewer-avatar">
+                    <div class="reviewer-info">
+                        <div class="reviewer-name">Sarah Chen</div>
+                        <div class="review-date">Verified Purchase • 1 week ago</div>
+                    </div>
+                    <div class="review-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="far fa-star"></i>
+                    </div>
+                </div>
+                <div class="review-content">
+                    <p>Great game overall! The multiplayer features are fantastic and I love how the community is so active. The only minor issue I have is that some of the loading times can be a bit long, but it's not a deal-breaker. Would definitely recommend to friends!</p>
+                </div>
+                <div class="review-helpful">
+                    <span>Helpful? <button>Yes (18)</button> <button>No (1)</button></span>
+                </div>
+            </div>
+
+            <!-- Review 3 -->
+            <div class="review-card">
+                <div class="review-header">
+                    <img src="https://i.pravatar.cc/150?img=3" alt="User Avatar" class="reviewer-avatar">
+                    <div class="reviewer-info">
+                        <div class="reviewer-name">Michael Rodriguez</div>
+                        <div class="review-date">Verified Purchase • 2 weeks ago</div>
+                    </div>
+                    <div class="review-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                </div>
+                <div class="review-content">
+                    <p>The game mechanics are solid and the world-building is impressive. I especially enjoy the crafting system and the variety of weapons available. The only thing I wish was better is the tutorial - it could be more comprehensive for new players. Still, a fantastic experience!</p>
+                </div>
+                <div class="review-helpful">
+                    <span>Helpful? <button>Yes (15)</button> <button>No (3)</button></span>
+                </div>
+            </div>
+        </div>
+
+        <button class="load-more-reviews">Load More Reviews</button>
+    </div>
+
+    <script>
+        function addToCart(gameId) {
+            fetch('/api/cart/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ game_id: gameId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification('Game added to cart successfully!');
+                    updateCartCount(data.cart_count);
+                } else {
+                    showNotification(data.message || 'Failed to add game to cart', 'error');
+                }
+            })
+            .catch(error => {
+                showNotification('Error adding game to cart', 'error');
+            });
+        }
+
+        function updateCartCount(count) {
+            const cartCount = document.getElementById('cart-count');
+            if (cartCount) {
+                cartCount.textContent = count;
+            }
+        }
+
+        function toggleWishlist(productId) {
+            fetch(`/api/wishlist/toggle/${productId}`, {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const button = document.querySelector('.wishlist-btn');
+                    if (button) {
+                        button.classList.toggle('in-wishlist');
+                        button.innerHTML = data.is_in_wishlist ? '♥' : '♡';
+                    }
+                }
+            });
+        }
+
+        // Check wishlist status when page loads
+        function checkWishlistStatus() {
+            const button = document.querySelector('.wishlist-btn');
+            if (button) {
+                const productId = button.getAttribute('data-id');
+                fetch(`/api/wishlist/status/${productId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.is_in_wishlist) {
+                            button.classList.add('in-wishlist');
+                            button.innerHTML = '♥';
+                        }
+                    });
+            }
+        }
+
+        // Call when page loads
+        document.addEventListener('DOMContentLoaded', checkWishlistStatus);
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            const closeBtn = document.querySelector('.modal-close');
+
+            // Open modal when clicking on gallery images
+            document.querySelectorAll('.gallery-image').forEach(img => {
+                img.addEventListener('click', function() {
+                    modal.style.display = 'flex';
+                    modalImg.src = this.src;
+                });
+            });
+
+            // Close modal when clicking the close button
+            closeBtn.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+
+            // Close modal when clicking outside the image
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

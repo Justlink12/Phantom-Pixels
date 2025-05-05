@@ -1,0 +1,404 @@
+<nav class="navbar">
+    <div class="nav-content">
+        <div class="nav-left">
+            <a href="/" class="logo">Phantom Pixels</a>
+        </div>
+        
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search games...">
+            <button onclick="performSearch()">Search</button>
+            <div id="searchResults" class="search-results"></div>
+        </div>
+        
+        <div class="nav-right">
+            {% if session.get('user_id') %}
+                <div class="user-menu">
+                    <div class="user-icon">
+                        <i class="fas fa-user"></i>
+                        <span>{{ session.get('username', 'User') }}</span>
+                    </div>
+                    <a href="/profile" class="nav-link profile-btn">Profile</a>
+                    <a href="/logout" class="nav-link logout-btn">Logout</a>
+                </div>
+            {% else %}
+                <a href="/login" class="nav-link">Login</a>
+                <a href="/register" class="nav-link">Register</a>
+            {% endif %}
+            {% if session.get('user_id') %}
+                <a href="/wishlist" class="nav-link">Wishlist</a>
+            {% endif %}
+            <a href="{{ url_for('cart') }}" class="nav-link cart-link">
+                <i class="fas fa-shopping-cart"></i>
+                Cart <span id="cart-count" class="cart-count">0</span>
+            </a>
+        </div>
+    </div>
+</nav>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
+
+.navbar {
+    background-color: #ff0000;
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.nav-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.nav-left .logo {
+    color: white;
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-family: 'Press Start 2P', cursive;
+    text-shadow: 2px 2px 0px #000;
+    letter-spacing: 1px;
+    white-space: nowrap;
+}
+
+.search-container {
+    display: flex;
+    gap: 10px;
+    flex: 1;
+    min-width: 200px;
+    max-width: 500px;
+    position: relative;
+    margin: 0 20px;
+}
+
+.search-container input {
+    flex: 1;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: rgba(255, 255, 255, 0.9);
+    min-width: 0;
+}
+
+.search-container button {
+    padding: 8px 16px;
+    background-color: #000;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+.search-container button:hover {
+    background-color: #333;
+}
+
+.search-results {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 5px;
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.search-result-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-result-item:hover {
+    background-color: #f5f5f5;
+}
+
+.search-result-item img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.search-result-info {
+    flex: 1;
+}
+
+.search-result-name {
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.search-result-price {
+    color: #2ecc71;
+}
+
+.nav-right {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.user-icon {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.8rem;
+    padding: 8px 12px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.user-icon i {
+    font-size: 1.2rem;
+}
+
+.logout-btn {
+    background-color: #e74c3c;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.logout-btn:hover {
+    background-color: #c0392b;
+}
+
+.profile-btn {
+    background-color: #3498db;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.profile-btn:hover {
+    background-color: #2980b9;
+}
+
+.nav-link {
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.8rem;
+    text-shadow: 1px 1px 0px #000;
+    white-space: nowrap;
+}
+
+.nav-link:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.cart-link {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background-color: #000;
+}
+
+.cart-count {
+    background-color: white;
+    color: #ff0000;
+    padding: 2px 6px;
+    border-radius: 50%;
+    font-size: 0.8rem;
+    font-family: 'Press Start 2P', cursive;
+    min-width: 20px;
+    height: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .nav-content {
+        padding: 0 15px;
+    }
+    
+    .search-container {
+        margin: 0 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .nav-content {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 10px;
+    }
+    
+    .nav-left {
+        text-align: center;
+    }
+    
+    .search-container {
+        width: 100%;
+        max-width: none;
+        margin: 10px 0;
+    }
+    
+    .nav-right {
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .user-menu {
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .nav-link {
+        font-size: 0.7rem;
+        padding: 6px 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-content {
+        padding: 8px;
+    }
+    
+    .nav-left .logo {
+        font-size: 1.2rem;
+    }
+    
+    .search-container button {
+        padding: 6px 12px;
+        font-size: 0.7rem;
+    }
+    
+    .user-icon {
+        font-size: 0.7rem;
+        padding: 6px 10px;
+    }
+    
+    .nav-link {
+        font-size: 0.6rem;
+        padding: 5px 10px;
+    }
+    
+    .cart-count {
+        font-size: 0.6rem;
+        min-width: 16px;
+        height: 16px;
+    }
+}
+</style>
+
+<script>
+// Search functionality
+function performSearch() {
+    const query = document.getElementById('searchInput').value.trim();
+    if (query) {
+        window.location.href = `/search?q=${encodeURIComponent(query)}`;
+    }
+}
+
+// Add event listener for search input
+document.getElementById('searchInput').addEventListener('keyup', function(event) {
+    if (event.key === 'Enter') {
+        performSearch();
+    }
+});
+
+// Live search results
+let searchTimeout;
+document.getElementById('searchInput').addEventListener('input', function(e) {
+    clearTimeout(searchTimeout);
+    const query = e.target.value.trim();
+    
+    if (query.length >= 2) {
+        searchTimeout = setTimeout(() => {
+            fetch(`/api/search?q=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const searchResults = document.getElementById('searchResults');
+                    if (data.results && data.results.length > 0) {
+                        searchResults.innerHTML = data.results
+                            .slice(0, 5)
+                            .map(game => `
+                                <div class="search-result-item" onclick="window.location.href='/game/${game.id}'">
+                                    <img src="https://picsum.photos/seed/${game.name.replace(/\s+/g, '')}/100/100" alt="${game.name}">
+                                    <div class="search-result-info">
+                                        <div class="search-result-name">${game.name}</div>
+                                        <div class="search-result-price">$${game.price.toFixed(2)}</div>
+                                    </div>
+                                </div>
+                            `)
+                            .join('');
+                        searchResults.style.display = 'block';
+                    } else {
+                        searchResults.innerHTML = '<div class="search-result-item">No results found</div>';
+                        searchResults.style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('Search error:', error);
+                });
+        }, 300);
+    } else {
+        document.getElementById('searchResults').style.display = 'none';
+    }
+});
+
+// Close search results when clicking outside
+document.addEventListener('click', function(event) {
+    const searchContainer = document.querySelector('.search-container');
+    const searchResults = document.getElementById('searchResults');
+    
+    if (!searchContainer.contains(event.target)) {
+        searchResults.style.display = 'none';
+    }
+});
+
+// Update cart count when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('/api/cart/count')
+        .then(response => response.json())
+        .then(data => {
+            const cartCount = document.getElementById('cart-count');
+            if (cartCount) {
+                cartCount.textContent = data.count;
+            }
+        });
+});
+</script>

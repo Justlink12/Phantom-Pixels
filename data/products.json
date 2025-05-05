@@ -1,0 +1,255 @@
+{
+    "1": {
+        "name": "Cyberpunk 2077",
+        "description": "An open-world action-adventure RPG set in Night City",
+        "price": 59.99,
+        "stock": 50,
+        "category": "Featured",
+        "releaseDate": "2020-12-10",
+        "genres": [
+            "Action",
+            "RPG"
+        ]
+    },
+    "2": {
+        "name": "The Witcher 3",
+        "description": "Epic fantasy RPG with a compelling narrative",
+        "price": 29.99,
+        "original_price": 59.99,
+        "stock": 30,
+        "category": "Regular",
+        "releaseDate": "2015-05-19",
+        "genres": [
+            "Fantasy",
+            "RPG"
+        ]
+    },
+    "3": {
+        "name": "Red Dead Redemption 2",
+        "description": "Epic Western-themed action game",
+        "price": 39.99,
+        "original_price": 59.99,
+        "stock": 25,
+        "category": "Regular",
+        "releaseDate": "2018-10-26",
+        "genres": [
+            "Action",
+            "Western"
+        ]
+    },
+    "4": {
+        "name": "Elden Ring",
+        "description": "Action RPG set in a dark fantasy world",
+        "price": 44.99,
+        "original_price": 69.99,
+        "stock": 40,
+        "category": "Regular",
+        "releaseDate": "2022-02-25",
+        "genres": [
+            "Action",
+            "RPG"
+        ]
+    },
+    "5": {
+        "name": "God of War",
+        "description": "Action-adventure game based on Norse mythology",
+        "price": 39.99,
+        "original_price": 59.99,
+        "stock": 35,
+        "category": "Regular",
+        "releaseDate": "2018-04-20",
+        "genres": [
+            "Action",
+            "Adventure"
+        ]
+    },
+    "6": {
+        "name": "Spider-Man 2",
+        "price": 69.99,
+        "stock": 35,
+        "image": "spiderman2.jpg",
+        "category": "Regular",
+        "description": "Swing through New York as Peter Parker and Miles Morales",
+        "releaseDate": "October 28, 2023",
+        "genres": [
+            "Action",
+            "Adventure"
+        ]
+    },
+    "7": {
+        "name": "Final Fantasy XVI",
+        "price": 59.99,
+        "stock": 30,
+        "image": "ff16.jpg",
+        "category": "Regular",
+        "description": "Experience the latest in the legendary RPG series",
+        "releaseDate": "June 22, 2023",
+        "genres": [
+            "RPG"
+        ]
+    },
+    "8": {
+        "name": "Starfield",
+        "price": 69.99,
+        "stock": 40,
+        "image": "starfield.jpg",
+        "category": "Regular",
+        "description": "Explore the cosmos in this epic space RPG",
+        "releaseDate": "September 6, 2023",
+        "genres": [
+            "RPG"
+        ]
+    },
+    "9": {
+        "name": "Resident Evil 4 Remake",
+        "price": 49.99,
+        "stock": 25,
+        "image": "re4.jpg",
+        "category": "Regular",
+        "description": "The classic horror game reimagined",
+        "releaseDate": "January 26, 2023",
+        "genres": [
+            "Horror"
+        ]
+    },
+    "10": {
+        "name": "Horizon Forbidden West",
+        "price": 49.99,
+        "stock": 35,
+        "image": "horizon.jpg",
+        "category": "Regular",
+        "description": "Continue Aloy's journey in this stunning open world",
+        "releaseDate": "February 18, 2022",
+        "genres": [
+            "Action",
+            "Adventure"
+        ]
+    },
+    "11": {
+        "name": "Baldur's Gate 3",
+        "price": 59.99,
+        "stock": 50,
+        "image": "bg3.jpg",
+        "category": "Regular",
+        "description": "Critically acclaimed D&D-based RPG",
+        "releaseDate": "August 3, 2023",
+        "genres": [
+            "RPG"
+        ]
+    },
+    "12": {
+        "name": "Street Fighter 6",
+        "price": 39.99,
+        "stock": 40,
+        "image": "sf6.jpg",
+        "category": "Regular",
+        "description": "The latest evolution in fighting games",
+        "releaseDate": "June 2, 2023",
+        "genres": [
+            "Fighting"
+        ]
+    },
+    "13": {
+        "name": "Diablo IV",
+        "price": 69.99,
+        "stock": 30,
+        "image": "diablo4.jpg",
+        "category": "Regular",
+        "description": "Return to the world of Sanctuary",
+        "releaseDate": "June 2, 2023",
+        "genres": [
+            "Action",
+            "RPG"
+        ]
+    },
+    "14": {
+        "name": "Assassin's Creed Mirage",
+        "price": 49.99,
+        "stock": 45,
+        "image": "acmirage.jpg",
+        "category": "Regular",
+        "description": "Return to the series' stealth-action roots",
+        "releaseDate": "September 12, 2023",
+        "genres": [
+            "Action",
+            "Stealth"
+        ]
+    },
+    "15": {
+        "name": "Alan Wake 2",
+        "price": 59.99,
+        "stock": 35,
+        "image": "alanwake2.jpg",
+        "category": "Regular",
+        "description": "Survive the dark presence in this psychological thriller",
+        "releaseDate": "October 17, 2023",
+        "genres": [
+            "Horror"
+        ]
+    },
+    "16": {
+        "name": "Mortal Kombat 1",
+        "price": 59.99,
+        "stock": 40,
+        "image": "mk1.jpg",
+        "category": "Regular",
+        "description": "Experience the brutal fighting game reboot",
+        "releaseDate": "September 19, 2021",
+        "genres": [
+            "Fighting"
+        ]
+    },
+    "17": {
+        "name": "Star Wars Jedi: Survivor",
+        "price": 54.99,
+        "stock": 30,
+        "image": "jedisurvivor.jpg",
+        "category": "Regular",
+        "description": "Continue Cal Kestis's journey",
+        "releaseDate": "April 28, 2023",
+        "genres": [
+            "Action",
+            "Adventure"
+        ],
+        "original_price": 59.99
+    },
+    "18": {
+        "name": "Dead Space Remake",
+        "price": 49.99,
+        "stock": 25,
+        "image": "deadspace.jpg",
+        "category": "Regular",
+        "description": "The sci-fi horror classic returns",
+        "releaseDate": "January 27, 2023",
+        "genres": [
+            "Horror"
+        ],
+        "original_price": 59.99
+    },
+    "19": {
+        "name": "Lies of P",
+        "price": 59.99,
+        "stock": 35,
+        "image": "liesofp.jpg",
+        "category": "Regular",
+        "description": "Soulslike reimagining of Pinocchio's tale",
+        "releaseDate": "September 19, 2023",
+        "genres": [
+            "Horror"
+        ],
+        "original_price": 69.99
+    },
+    "20": {
+        "name": "Sea of Stars",
+        "price": 34.99,
+        "stock": 50,
+        "image": "seastars.jpg",
+        "category": "Regular",
+        "description": "Classic-style RPG with modern touches",
+        "releaseDate": "October 24, 2023",
+        "genres": [
+            "RPG"
+        ],
+        "original_price": 49.99
+    }
+}

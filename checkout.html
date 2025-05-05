@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Checkout - Phantom Pixels</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .checkout-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+        .checkout-form {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .order-summary {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .cart-item {
+            display: flex;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .cart-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+        .submit-button {
+            background: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1.1em;
+            width: 100%;
+        }
+        .back-button {
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: #666;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="checkout-container">
+        <div class="checkout-form">
+            <button class="back-button" onclick="window.location.href='store_front.html'">← Back to Store</button>
+            <h2>Checkout</h2>
+            <form id="paymentForm" onsubmit="handleSubmit(event)">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Shipping Address</label>
+                    <input type="text" id="address" required>
+                </div>
+                <div class="form-group">
+                    <label for="city">City</label>
+                    <input type="text" id="city" required>
+                </div>
+                <div class="form-group">
+                    <label for="postal">Postal Code</label>
+                    <input type="text" id="postal" required>
+                </div>
+                <div class="form-group">
+                    <label for="card">Card Number</label>
+                    <input type="text" id="card" required pattern="\d{16}" placeholder="1234567890123456">
+                </div>
+                <div class="form-group">
+                    <label for="expiry">Expiry Date</label>
+                    <input type="text" id="expiry" required pattern="\d{2}/\d{2}" placeholder="MM/YY">
+                </div>
+                <div class="form-group">
+                    <label for="cvv">CVV</label>
+                    <input type="text" id="cvv" required pattern="\d{3}" placeholder="123">
+                </div>
+                <button type="submit" class="submit-button">Place Order</button>
+            </form>
+        </div>
+        
+        <div class="order-summary">
+            <h3>Order Summary</h3>
+            <div id="cartItems"></div>
+            <div id="totalAmount" style="margin-top: 20px; font-size: 1.2em; font-weight: bold;"></div>
+        </div>
+    </div>
+
+    <script>
+        function loadCart() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const cartItems = document.getElementById('cartItems');
+            const totalAmount = document.getElementById('totalAmount');
+            
+            let total = 0;
+            cartItems.innerHTML = cart.map(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                return `
+                    <div class="cart-item">
+                        <img src="https://via.placeholder.com/60?text=${encodeURIComponent(item.name)}" alt="${item.name}">
+                        <div>
+                            <h4>${item.name}</h4>
+                            <p>Quantity: ${item.quantity}</p>
+                            <p>$${itemTotal.toFixed(2)}</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            totalAmount.textContent = `Total: $${total.toFixed(2)}`;
+        }
+
+        async function handleSubmit(event) {
+            event.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                address: document.getElementById('address').value,
+                city: document.getElementById('city').value,
+                postal: document.getElementById('postal').value,
+                card: document.getElementById('card').value,
+                expiry: document.getElementById('expiry').value,
+                cvv: document.getElementById('cvv').value,
+                cart: JSON.parse(localStorage.getItem('cart') || '[]')
+            };
+
+            try {
+                const response = await fetch('http://localhost:5000/api/order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    alert('Order placed successfully!');
+                    localStorage.removeItem('cart');
+                    window.location.href = 'store_front.html';
+                } else {
+                    const data = await response.json();
+                    alert(data.error || 'Error placing order');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error placing order');
+            }
+        }
+
+        // Load cart when page loads
+        document.addEventListener('DOMContentLoaded', loadCart);
+    </script>
+</body>
+</html> 
